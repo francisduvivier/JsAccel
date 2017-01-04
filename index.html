@@ -96,7 +96,7 @@ function reset(){
 	startMs=currentmillis();
 }
 
-setInterval(function(){document.getElementById('pItem').innerHTML='Acceldata rate is at ' +  Math.floor(1000*nbDifferentValues/currentmillis()) +'Hz'; reset()},1000);
+setInterval(function(){document.getElementById('pItem').innerHTML='Accelerometer data frequency is ' +  Math.floor(1000*nbDifferentValues/currentmillis()) +'Hz'; reset()},1000);
 
 </script>
 <script type="text/javascript">
