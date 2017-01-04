@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+<script type="text/javascript">
+
+</script>
+<style type="text/css">
+	.barContainer{
+		float:left;
+		height:100px;
+		width:1px;
+	}
+	.xbar{
+		position: relative;
+		background-color: rgba(250,0,0,0.3);
+	}
+	
+	.ybar{
+		position: relative;
+		background-color: rgba(0,250,0,0.3);
+	}
+	.zbar{
+		position: relative;
+		background-color: rgba(0,0,250,0.3);
+	}
+	.graph{
+		position: absolute;
+		height:100px;
+		width:1000px
+	}
+</style>
+</head>
+
+<body>
+<button type="button" onclick="withGraphics=!withGraphics">Turn on/off Graphs</button>
+<p id='pItem'>
+
+</p>
+
+
+<script type='text/javascript'>
+function currentmillis() {
+	return (new Date()).getTime()-startMs;
+}
+
+var lastx=0
+var lasty=0
+var lastz=0
+
+var withGraphics=false;
+
+var parent =null;
+
+var nbDifferentValues=0;
+
+var startMs=0
+startMs=currentmillis();
+
+window.ondevicemotion = function(event){
+	nbDifferentValues++;
+	if(withGraphics){
+		if(parent==null){
+			parent=[document.getElementById('xgraph'),document.getElementById('ygraph'),document.getElementById('zgraph')];
+		}
+		var x=event.accelerationIncludingGravity.x;
+		var y= event.accelerationIncludingGravity.y;
+		var z= event.accelerationIncludingGravity.z;
+
+
+			data=[['xgraph',x-lastx],['ygraph',y-lasty],['zgraph',z-lastz]];
+			for(i in data){
+				var el=parent[i].children[0];
+				el.remove();
+				var diff=Math.floor(data[i][1]*300);
+				el.children[0].style.setProperty('height',Math.abs(diff)+'px');
+				if(diff<0){
+					el.children[0].style.setProperty('margin-top',diff+'px');	
+				}
+				else{
+					el.children[0].style.setProperty('margin-top',0+'px');	
+				}
+				parent[i].appendChild(el);
+			}
+			lastx=x;
+			lasty=y;
+			lastz=z;
+	}
+	// }
+
+
+}
+// }
+function reset(){
+	nbDifferentValues=startMs=0;
+	startMs=currentmillis();
+}
+
+setInterval(function(){document.getElementById('pItem').innerHTML='Acceldata rate is at ' +  Math.floor(1000*nbDifferentValues/currentmillis()) +'Hz'; reset()},1000);
+
+</script>
+<script type="text/javascript">
+var ids=["x","y","z"]
+for(j in ids){
+	axis=ids[j];
+	var marg=j*150;
+	marg+=100;
+	document.write('<div class="graph" id="'+axis+'graph" style="margin-top:'+marg+'px">')
+	var nbgraphdots=360;
+	for(i=0;i<nbgraphdots;i++){
+		document.write('<div class="barContainer"'+'><div class="'+axis+'bar"'+'></'+'div></'+'div>');
+	}
+	document.write('</div'+'>')
+}
+</script>
+
+
+</body>
+</html>
